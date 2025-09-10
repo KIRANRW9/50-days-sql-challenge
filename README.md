@@ -1,2 +1,3 @@
-# 50-days-sql-challenge
-Daily SQL challenges to practice and demonstrate practical SQL skills in data analysis, business intelligence, and data science. Includes solutions and explanations covering joins, aggregations, window functions, and real-world scenarios.
+This repository features a curated collection of 50 SQL challenges designed to build and demonstrate strong SQL proficiency for data analytics, business intelligence, and data science roles. Each daily post includes a real-world inspired SQL problem, a clear and optimized solution, and insightful explanations illustrating key concepts such as joins, window functions, aggregations, subqueries, and data manipulation techniques.
+
+This challenge series highlights hands-on skills acquired through academic projects, internships, and problem-solving competitions, making it an ideal portfolio piece for recruiters and hiring managers looking for candidates with solid technical and analytical abilities.
