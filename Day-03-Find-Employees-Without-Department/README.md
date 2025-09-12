@@ -152,3 +152,5 @@ emp_id | emp_name      | department_id | department_name | salary
 
 ## Key Learning
 LEFT JOIN is essential for finding missing relationships between tables. The pattern `LEFT JOIN ... WHERE right_table.key IS NULL` is a fundamental technique for identifying orphaned records and data quality issues. Understanding NULL handling is crucial for accurate data analysis and maintaining referential integrity.
+
+COALESCE Function: COALESCE provides an elegant way to handle NULL values by returning the first non-NULL value from a list of expressions. It's particularly useful in reporting scenarios where you need to display meaningful labels instead of NULL values (e.g., COALESCE(department_name, 'NO DEPARTMENT')). This function improves data presentation and makes query results more user-friendly, especially when dealing with optional or missing relationships in joined tables.
