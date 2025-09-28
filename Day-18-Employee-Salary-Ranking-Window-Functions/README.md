@@ -272,7 +272,3 @@ employee_id | employee_name | department_name | salary    | salary_rank | perfor
 
 These salary ranking queries enable HR departments to make data-driven decisions about compensation, promotions, and organizational structure. The combination of rankings, percentiles, and gap analysis provides comprehensive insights for strategic talent management and equitable compensation practices.
 
-## **Folder Name:**
-```
-Day-18-Employee-Salary-Ranking-Window-Functions
-```
