@@ -6,7 +6,11 @@ The customer retention team needs to identify churned customers who haven't plac
 ## Dataset
 Customer and order data with transaction dates to identify customers who have stopped purchasing and analyze their characteristics for targeted retention campaigns.
 
+---
+
 ## SQL Solution
+
+### Create Tables
 
 ```sql
 -- Create Customers table
@@ -30,35 +34,79 @@ CREATE TABLE Orders (
 );
 ```
 
+### Insert Sample Data
+
+```sql
+-- Insert Customers data
+INSERT INTO Customers (customer_id, customer_name, email, registration_date, customer_tier, city) VALUES
+(1001, 'Rajesh Kumar', 'rajesh.kumar@email.com', '2022-01-15', 'Premium', 'Mumbai'),
+(1002, 'Priya Sharma', 'priya.sharma@email.com', '2022-02-20', 'Gold', 'Delhi'),
+(1003, 'Amit Patel', 'amit.patel@email.com', '2022-03-10', 'Silver', 'Bangalore'),
+(1004, 'Sneha Reddy', 'sneha.reddy@email.com', '2022-04-05', 'Premium', 'Hyderabad'),
+(1005, 'Vikram Singh', 'vikram.singh@email.com', '2022-05-12', 'Gold', 'Jaipur'),
+(1006, 'Anita Desai', 'anita.desai@email.com', '2022-06-18', 'Silver', 'Pune'),
+(1007, 'Rohit Mehta', 'rohit.mehta@email.com', '2022-07-22', 'Gold', 'Ahmedabad'),
+(1008, 'Kavya Pillai', 'kavya.pillai@email.com', '2022-08-30', 'Gold', 'Kochi'),
+(1009, 'Arjun Nair', 'arjun.nair@email.com', '2022-09-14', 'Premium', 'Kolkata'),
+(1010, 'Deepa Joshi', 'deepa.joshi@email.com', '2022-10-25', 'Silver', 'Chennai');
+
+-- Insert Orders data (Active customers - recent orders)
+INSERT INTO Orders (order_id, customer_id, product_name, order_amount, order_date, status) VALUES
+(2001, 1001, 'Laptop', 65000.00, '2024-09-25', 'Completed'),
+(2002, 1001, 'Mouse', 1500.00, '2024-09-26', 'Completed'),
+(2003, 1003, 'Monitor', 18000.00, '2024-09-28', 'Completed'),
+(2004, 1005, 'Keyboard', 3500.00, '2024-09-27', 'Completed'),
+(2005, 1009, 'Headphones', 8500.00, '2024-08-20', 'Completed'),
+(2006, 1007, 'Webcam', 4500.00, '2024-07-15', 'Completed');
+
+-- Insert Orders data (Churned customers - old orders from 6+ months ago)
+INSERT INTO Orders (order_id, customer_id, product_name, order_amount, order_date, status) VALUES
+(2007, 1002, 'Laptop', 55000.00, '2023-09-15', 'Completed'),
+(2008, 1002, 'Tablet', 35000.00, '2023-08-20', 'Completed'),
+(2009, 1002, 'Mouse', 2000.00, '2023-07-10', 'Completed'),
+(2010, 1004, 'Desktop', 75000.00, '2023-10-20', 'Completed'),
+(2011, 1004, 'Monitor', 25000.00, '2023-09-15', 'Completed'),
+(2012, 1006, 'Laptop', 48000.00, '2023-11-10', 'Completed'),
+(2013, 1006, 'Keyboard', 4000.00, '2023-10-05', 'Completed'),
+(2014, 1008, 'Tablet', 32000.00, '2023-10-05', 'Completed'),
+(2015, 1008, 'Mouse', 1800.00, '2023-09-12', 'Completed'),
+(2016, 1010, 'Monitor', 22000.00, '2023-09-28', 'Completed'),
+(2017, 1010, 'Webcam', 5500.00, '2023-08-15', 'Completed');
+
+-- Additional historical orders for better analysis
+INSERT INTO Orders (order_id, customer_id, product_name, order_amount, order_date, status) VALUES
+(2018, 1001, 'Tablet', 28000.00, '2024-08-15', 'Completed'),
+(2019, 1001, 'Headphones', 7500.00, '2024-07-20', 'Completed'),
+(2020, 1003, 'Laptop', 62000.00, '2024-08-10', 'Completed'),
+(2021, 1005, 'Desktop', 85000.00, '2024-08-05', 'Completed'),
+(2022, 1009, 'Monitor', 19000.00, '2024-07-25', 'Completed'),
+(2023, 1002, 'Headphones', 8500.00, '2023-06-15', 'Completed'),
+(2024, 1004, 'Keyboard', 3800.00, '2023-08-20', 'Completed'),
+(2025, 1006, 'Mouse', 2200.00, '2023-09-05', 'Completed'),
+(2026, 1008, 'Webcam', 6000.00, '2023-08-10', 'Completed'),
+(2027, 1010, 'Keyboard', 3500.00, '2023-07-20', 'Completed');
+```
+
+---
+
 ## Query 1: Find Churned Customers (No Orders in Last 6 Months)
 
 ```sql
--- MySQL version - Find customers with no orders in last 6 months
+-- Find customers with no orders in last 6 months
 SELECT customer_id
 FROM Orders
 GROUP BY customer_id
 HAVING MAX(order_date) < DATE_SUB(CURDATE(), INTERVAL 6 MONTH);
 ```
 
-### Output:
-
-```
-customer_id
------------
-1002
-1004
-1006
-1008
-1010
-```
-
-
 **How it works:**
 - `MAX(order_date)` finds the most recent order for each customer
 - `DATE_SUB(CURDATE(), INTERVAL 6 MONTH)` calculates date 6 months ago
 - `HAVING` filters groups where last order is older than 6 months
 
-## Query 2: Churned Customers with Details 
+---
+
+## Query 2: Churned Customers with Details
 
 ```sql
 -- Get detailed information about churned customers
@@ -79,25 +127,13 @@ HAVING MAX(o.order_date) < DATE_SUB(CURDATE(), INTERVAL 6 MONTH)
 ORDER BY lifetime_value DESC;
 ```
 
-### Output:
-
-```
-customer_id | customer_name | email                    | customer_tier | city      | last_order_date | days_since_last_order | total_orders | lifetime_value
-------------|---------------|--------------------------|---------------|-----------|-----------------|-----------------------|--------------|---------------
-1002        | Priya Sharma  | priya.sharma@email.com   | Gold          | Delhi     | 2023-09-15      | 385                   | 8            | 425000.00
-1004        | Sneha Reddy   | sneha.reddy@email.com    | Premium       | Hyderabad | 2023-10-20      | 350                   | 6            | 380000.00
-1006        | Anita Desai   | anita.desai@email.com    | Silver        | Pune      | 2023-11-10      | 329                   | 5            | 195000.00
-1008        | Kavya Pillai  | kavya.pillai@email.com   | Gold          | Kochi     | 2023-10-05      | 365                   | 4            | 150000.00
-1010        | Deepa Joshi   | deepa.joshi@email.com    | Silver        | Chennai   | 2023-09-28      | 372                   | 3            | 95000.00
-```
-
-
-
 **How it works:**
 - `JOIN` combines customer details with their orders
 - `GROUP BY` aggregates data per customer
 - `DATEDIFF` calculates days since last purchase
 - `HAVING` filters for customers inactive 6+ months
+
+---
 
 ## Query 3: Customer Status Classification
 
@@ -123,31 +159,15 @@ GROUP BY c.customer_id, c.customer_name, c.customer_tier
 ORDER BY days_inactive DESC;
 ```
 
-### Output:
-
-```
-customer_id | customer_name | customer_tier | last_order_date | days_inactive | customer_status | total_orders | lifetime_value
-------------|---------------|---------------|-----------------|---------------|-----------------|--------------|---------------
-1002        | Priya Sharma  | Gold          | 2023-09-15      | 385           | Churned         | 8            | 425000.00
-1010        | Deepa Joshi   | Silver        | 2023-09-28      | 372           | Churned         | 3            | 95000.00
-1008        | Kavya Pillai  | Gold          | 2023-10-05      | 365           | Churned         | 4            | 150000.00
-1004        | Sneha Reddy   | Premium       | 2023-10-20      | 350           | Churned         | 6            | 380000.00
-1006        | Anita Desai   | Silver        | 2023-11-10      | 329           | Churned         | 5            | 195000.00
-1007        | Rohit Mehta   | Gold          | 2024-07-15      | 75            | Dormant         | 7            | 320000.00
-1009        | Arjun Nair    | Premium       | 2024-08-20      | 39            | At Risk         | 9            | 550000.00
-1001        | Rajesh Kumar  | Premium       | 2024-09-25      | 4             | Active          | 12           | 780000.00
-1003        | Amit Patel    | Silver        | 2024-09-28      | 1             | Active          | 10           | 620000.00
-1005        | Vikram Singh  | Gold          | 2024-09-27      | 2             | Active          | 11           | 695000.00
-```
-
-
 **How it works:**
 - `CASE WHEN` creates different customer status categories
 - `DATE_SUB` with different intervals defines each status
 - `LEFT JOIN` includes customers even if they have no orders
 - Results show customer lifecycle stages
 
-## Query 4: Churn Rate Analysis by Customer Tier 
+---
+
+## Query 4: Churn Rate Analysis by Customer Tier
 
 ```sql
 -- Calculate churn rate by customer tier
@@ -174,24 +194,15 @@ GROUP BY customer_tier
 ORDER BY churn_rate_pct DESC;
 ```
 
-### Output:
-
-```
-customer_tier | total_customers | churned_customers | active_customers | churn_rate_pct
---------------|-----------------|-------------------|------------------|---------------
-Silver        | 4               | 3                 | 1                | 75.00
-Gold          | 3               | 2                 | 1                | 66.67
-Premium       | 3               | 1                 | 2                | 33.33
-```
-
-
 **How it works:**
 - **CTE (WITH clause)** creates a temporary result set
 - `is_churned` flag: 1 if churned, 0 if active
 - `SUM(is_churned)` counts churned customers
 - Churn rate = (Churned / Total) × 100
 
-## Query 5: High-Value Churned Customers for Win-Back Campaign 
+---
+
+## Query 5: High-Value Churned Customers for Win-Back Campaign
 
 ```sql
 -- Identify high-value churned customers for targeted campaigns
@@ -219,34 +230,24 @@ HAVING MAX(o.order_date) < DATE_SUB(CURDATE(), INTERVAL 6 MONTH)
 ORDER BY lifetime_value DESC, days_since_last_order;
 ```
 
-### Output:
-
-```
-customer_id | customer_name | email                    | customer_tier | city      | last_order_date | days_since_last_order | total_orders | lifetime_value | avg_order_value | winback_priority
-------------|---------------|--------------------------|---------------|-----------|-----------------|-----------------------|--------------|----------------|-----------------|------------------
-1002        | Priya Sharma  | priya.sharma@email.com   | Gold          | Delhi     | 2023-09-15      | 385                   | 8            | 425000.00      | 53125.00        | High Priority
-1004        | Sneha Reddy   | sneha.reddy@email.com    | Premium       | Hyderabad | 2023-10-20      | 350                   | 6            | 380000.00      | 63333.33        | High Priority
-1006        | Anita Desai   | anita.desai@email.com    | Silver        | Pune      | 2023-11-10      | 329                   | 5            | 195000.00      | 39000.00        | Medium Priority
-1008        | Kavya Pillai  | kavya.pillai@email.com   | Gold          | Kochi     | 2023-10-05      | 365                   | 4            | 150000.00      | 37500.00        | Medium Priority
-```
-
-
 **How it works:**
 - Identifies churned customers with high lifetime value
 - `HAVING` with two conditions: churned AND high value
 - `winback_priority` categorizes customers for campaigns
 - Sorted by value to focus on most valuable lost customers
 
-## How It Works
+---
 
-### Key Concepts
-* **MAX(order_date)**: Finds the most recent order date for each customer
-* **DATE_SUB()**: Subtracts time interval from current date (MySQL syntax)
-* **DATEDIFF()**: Calculates difference in days between two dates
-* **HAVING vs WHERE**: HAVING filters after GROUP BY, WHERE filters before
-* **LEFT JOIN**: Includes all customers even if they have no orders
-* **CTE (WITH clause)**: Creates temporary named result set for clarity
+## Key Concepts
 
+- **MAX(order_date)**: Finds the most recent order date for each customer
+- **DATE_SUB()**: Subtracts time interval from current date (MySQL syntax)
+- **DATEDIFF()**: Calculates difference in days between two dates
+- **HAVING vs WHERE**: HAVING filters after GROUP BY, WHERE filters before
+- **LEFT JOIN**: Includes all customers even if they have no orders
+- **CTE (WITH clause)**: Creates temporary named result set for clarity
+
+---
 
 ## Real World Use Cases
 
@@ -259,19 +260,10 @@ customer_id | customer_name | email                    | customer_tier | city   
 7. **Revenue Forecasting**: Account for expected churn in projections
 8. **Loyalty Programs**: Design interventions for each customer status
 
-## Key Learning Points
+---
 
-### Understanding GROUP BY with HAVING
-**GROUP BY** creates groups, **HAVING** filters those groups. Think of it as:
-1. First, group customers together
-2. Then, for each group, find their last order
-3. Finally, keep only groups where last order is old
+## Formula
 
-### Date Calculations
-- `CURDATE()` = Today's date
-- `DATE_SUB(CURDATE(), INTERVAL 6 MONTH)` = 6 months ago
-- `MAX(order_date) < [6 months ago]` = Last order was before 6 months ago
 ```
 Churn Rate = (Churned Customers / Total Customers) × 100
 ```
-
