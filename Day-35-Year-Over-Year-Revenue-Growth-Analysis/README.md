@@ -20,7 +20,7 @@ CREATE TABLE Orders (
 );
 ```
 
-## Query 1: Calculate Year-Over-Year Revenue Growth ⭐ CRITICAL FOR FRESHERS
+## Query 1: Calculate Year-Over-Year Revenue Growth 
 
 ```sql
 -- Calculate YoY revenue growth by year
@@ -44,15 +44,13 @@ year | revenue    | previous_year_revenue | yoy_growth
 2024 | 2500000.00 | 1875000.00           | 625000.00
 ```
 
-**Interview Probability: 95% - LAG with year grouping is fundamental**
-
 **How it works:**
 1. **GROUP BY YEAR()** aggregates revenue by year
 2. **LAG()** gets previous year's revenue for comparison
 3. **Subtraction** calculates absolute growth difference
 4. Results show both previous and current revenue for context
 
-## Query 2: YoY Growth with Percentage Change ⭐ CRITICAL FOR FRESHERS
+## Query 2: YoY Growth with Percentage Change 
 
 ```sql
 -- Calculate YoY growth with percentage and growth rate
@@ -93,15 +91,13 @@ year | revenue    | previous_year_revenue | yoy_growth | yoy_growth_pct | growth
 2024 | 2500000.00 | 1875000.00           | 625000.00  | 33.33          | Excellent (25%+)
 ```
 
-**Interview Probability: 90% - YoY with percentage calculations**
-
 **How it works:**
 - Calculates absolute growth in rupees
 - Calculates growth percentage for comparison
 - CASE statement categorizes growth into meaningful buckets
 - Helps stakeholders understand growth significance
 
-## Query 3: Monthly YoY Comparison ⭐ CRITICAL FOR FRESHERS
+## Query 3: Monthly YoY Comparison 
 
 ```sql
 -- Compare monthly revenue across years (same month, different years)
@@ -131,15 +127,13 @@ month | month_name | year | revenue
 3     | March      | 2024 | 205000.00
 ```
 
-**Interview Probability: 85% - Multi-year monthly comparison**
-
 **How it works:**
 - Groups by both month and year
 - Shows same month across different years
 - Enables easy visual comparison of seasonality
 - Identifies if patterns are consistent
 
-## Query 4: Quarter-wise YoY Growth ⭐ CRITICAL FOR FRESHERS
+## Query 4: Quarter-wise YoY Growth 
 
 ```sql
 -- Calculate YoY growth by quarter for better granularity
@@ -172,15 +166,13 @@ year | quarter | quarter_label | revenue    | previous_year_q_revenue | q_yoy_gr
 2024 | 2       | Q2-2024       | 625000.00  | 468000.00              | 157000.00    | 33.55
 ```
 
-**Interview Probability: 80% - Quarterly segmentation with YoY**
-
 **How it works:**
 - PARTITION BY QUARTER creates separate comparisons per quarter
 - Shows Q1 vs Q1, Q2 vs Q2 across years
 - More granular than annual, less detailed than monthly
 - Better for business planning discussions
 
-## Query 5: Cumulative YoY Analysis ⭐ CRITICAL FOR FRESHERS
+## Query 5: Cumulative YoY Analysis 
 
 ```sql
 -- Cumulative revenue analysis with YoY growth trend
@@ -224,8 +216,6 @@ year | annual_revenue | business_days | total_orders | previous_year_revenue | y
 2023 | 1875000.00     | 220           | 30           | 1250000.00           | 625000.00  | 50.00          | 8522.73           | 62500.00        | Previous Year
 2022 | 1250000.00     | 215           | 25           | NULL                 | NULL       | NULL           | 5813.95           | 50000.00        | Historical
 ```
-
-**Interview Probability: 75% - Comprehensive metrics with growth trend**
 
 **How it works:**
 - Calculates multiple metrics: growth, average daily revenue, average order value
