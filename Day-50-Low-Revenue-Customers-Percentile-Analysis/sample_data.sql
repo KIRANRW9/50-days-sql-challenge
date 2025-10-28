@@ -109,5 +109,3 @@ INSERT INTO Orders VALUES
 INSERT INTO Orders VALUES
 (23, 106, 'Website Builder', 12000.00, '2024-01-22', 'Completed'),
 (24, 106, 'SEO Tools', 10000.00, '2024-03-01', 'Completed');
-
--- Customer 116: 18
